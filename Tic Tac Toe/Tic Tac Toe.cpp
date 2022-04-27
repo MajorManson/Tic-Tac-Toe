@@ -1,4 +1,3 @@
-#include "pch.h"
 #include "Tic Tac Toe.h"
 #include <ctype.h>
 #include <conio.h>
@@ -29,7 +28,6 @@ int menu() {
 	cout <<"  Two players";
 
 	do {
-
 		int c = 0;
 
 		switch (c = _getch()) {
@@ -58,7 +56,6 @@ int menu() {
 	} while (e == 1);
 
 	if (m == 1) {
-
 		e = 1;
 
 		system("cls");
@@ -100,122 +97,100 @@ int menu() {
 
 int checkWin() {
 	//Horizontal win
-	if (grid[1] == grid[2] && grid[2] == grid[3]) {
-		return 1;
+	for (int i{ 0 }; i < 3; i++) {
+		int ind = 1 + i * 3;
+		if (grid[ind] == grid[ind + 1] && grid[ind + 1] == grid[ind + 2]) {
+			return 1;
+		}
 	}
-	else if (grid[4] == grid[5] && grid[5] == grid[6]) {
-		return 1;
-	}
-	else if (grid[7] == grid[8] && grid[8] == grid[9]) {
-		return 1;
-	}
+
 	//Diagonal win
-	else if (grid[1] == grid[5] && grid[5] == grid[9]) {
+	if (grid[1] == grid[5] && grid[5] == grid[9]) {
 		return 1;
 	}
 	else if (grid[3] == grid[5] && grid[5] == grid[7]) {
 		return 1;
 	}
 	//Vertical win
-	else if (grid[1] == grid[4] && grid[4] == grid[7]) {
-		return 1;
+	for (int i{ 0 }; i < 3; i++) {
+		int ind = 1 + i;
+		if (grid[ind] == grid[ind + 3] && grid[ind + 3] == grid[ind + 6]) {
+			return 1;
+		}
 	}
-	else if (grid[2] == grid[5] && grid[5] == grid[8]) {
-		return 1;
-	}
-	else if (grid[3] == grid[6] && grid[6] == grid[9]) {
-		return 1;
-	}
+
 	//Check if grid[] is filled
-	else if (grid[1] != '1' && grid[2] != '2' && grid[3] != '3' && grid[4] != '4' &&
+	if (grid[1] != '1' && grid[2] != '2' && grid[3] != '3' && grid[4] != '4' &&
 		grid[5] != '5' && grid[6] != '6' && grid[7] != '7' && grid[8] != '8' &&
 		grid[9] != '9') {
 		return 0;
 	}
-	else {
-		return -1;
-	}
+
+	return -1;
+
 }
 
 void display() {
 	system("cls");
 	cout << "\t Tic Tac Toe \n\n";
-	cout << "Player 1-(X)\tPlayer 2-(O)\n\n";
+	if (!d) {
+		printf("Player 1-(X)\tPlayer 2-(O)\n\n");
+	}
+	else {
+		printf("Player 1-(X)\tComputer 2-(O)\n\n");
+	}
 
-	for (int i{ 1 }; i < 4; i++) {
+	for (int i{ 0 }; i < 3; i++) {
 		//cout << "     |     |     \n";
 		printf("     |     |     \n");
-		switch (i) {
-			case(1):
-				printf("  %c  |  %c  |  %c\n", grid[1], grid[2], grid[3]);
-				//cout << " " << grid[1] << "   |  " << grid[2] << "  |  " << grid[3] << "\n";
-				printf("     |     |     \n");
-				//cout << "     |     |     \n";
-				printf("-----|-----|-----\n");
-				//cout << "-----|-----|-----\n";
-				break;
-			case(2):
-				printf("  %c  |  %c  |  %c\n", grid[4], grid[5], grid[6]);
-				//cout << " " << grid[4] << "   |  " << grid[5] << "  |  " << grid[6] << "\n";
-				printf("     |     |     \n");
-				//cout << "     |     |     \n";
-				printf("-----|-----|-----\n");
-				//cout << "-----|-----|-----\n";
-				break;
-			case(3):
-				printf("  %c  |  %c  |  %c\n", grid[7], grid[8], grid[9]);
-				//cout << " " << grid[7] << "   |  " << grid[8] << "  |  " << grid[9] << "\n";
-				printf("     |     |     \n");
-				//cout << "     |     |     \n";
-				break;
+		int ind = 1 + i * 3;
+
+		printf("  %c  |  %c  |  %c\n", grid[ind], grid[ind + 1], grid[ind + 2]);
+		//cout << " " << grid[1] << "   |  " << grid[2] << "  |  " << grid[3] << "\n";
+		printf("     |     |     \n");
+		//cout << "     |     |     \n";
+		
+		if (i != 2) {
+			printf("-----|-----|-----\n");
 		}
+	}
+}
+
+int pickBoard(char choice, char sign) {
+	int num = choice - '0';
+	switch(num) {
+	case 1:
+	case 2:
+	case 3:
+	case 4:
+	case 5:
+	case 6:	
+	case 7:
+	case 8:
+	case 9:
+		grid[num] = sign;
+		return 1;
+	default:
+		return 0;
 	}
 }
 
 int singlePlayer() {
 
-	int player{ 1 }, i{ -1 }, choice;
-	char sign;
-	display();
+	int player{ 1 }, i{ -1 };
+	char sign, choice;
 
 	do {
-
+		display();
 		player = (player % 2) ? 1 : 2;
-		sign = (player == 1) ? 'X' : NULL;
+		sign = (player == 1) ? 'X' : 'O';
 
 		if (player == 1) {
 
 			printf("Player %u, enter your number: ", player);
 			cin >> choice;
-
-			if (choice == 1 && grid[1] == '1') {
-				grid[1] = sign;
-			}
-			else if (choice == 2 && grid[2] == '2') {
-				grid[2] = sign;
-			}
-			else if (choice == 3 && grid[3] == '3') {
-				grid[3] = sign;
-			}
-			else if (choice == 4 && grid[4] == '4') {
-				grid[4] = sign;
-			}
-			else if (choice == 5 && grid[5] == '5') {
-				grid[5] = sign;
-			}
-			else if (choice == 6 && grid[6] == '6') {
-				grid[6] = sign;
-			}
-			else if (choice == 7 && grid[7] == '7') {
-				grid[7] = sign;
-			}
-			else if (choice == 8 && grid[8] == '8') {
-				grid[8] = sign;
-			}
-			else if (choice == 9 && grid[9] == '9') {
-				grid[9] = sign;
-			}
-			else {
+			
+			if (!pickBoard(choice, sign)) {
 				printf("Invalid, press any key to continue...");
 				_getch();
 			}
@@ -225,8 +200,7 @@ int singlePlayer() {
 		}
 		
 		i = checkWin();
-		(i == -1) ? player++ : NULL;
-		display();
+		(i == -1) ? player++ : -1;
 
 	} while (i == -1);
 
@@ -250,54 +224,23 @@ int singlePlayer() {
 int twoPlayer() {
 
 	int player{ 1 }, i{ -1 };
-	char sign;
-	string choice;
-	display();
+	char sign, choice;
 
 	do {
-
+		display();
 		player = (player % 2) ? 1 : 2;
 		sign = (player == 1) ? 'X' : 'O';
 		printf("Player %u, enter your number: ", player);
 
-		getline(cin, choice);
-
-		if (choice == "1" && grid[1] == '1') {
-			grid[1] = sign;
-		}
-		else if (choice == "2" && grid[2] == '2') {
-			grid[2] = sign;
-		}
-		else if (choice == "3" && grid[3] == '3') {
-			grid[3] = sign;
-		}
-		else if (choice == "4" && grid[4] == '4') {
-			grid[4] = sign;
-		}
-		else if (choice == "5" && grid[5] == '5') {
-			grid[5] = sign;
-		}
-		else if (choice == "6" && grid[6] == '6') {
-			grid[6] = sign;
-		}
-		else if (choice == "7" && grid[7] == '7') {
-			grid[7] = sign;
-		}
-		else if (choice == "8" && grid[8] == '8') {
-			grid[8] = sign;
-		}
-		else if (choice == "9" && grid[9] == '9') {
-			grid[9] = sign;
-		}
-		else {
+		cin >> choice;
+		
+		if (!pickBoard(choice, sign)) {
 			printf("Invalid, press any key to continue...");
 			_getch();
 		}
 
 		i = checkWin();
-		(i == -1) ? player++ : NULL;
-		display();
-		choice = "";
+		(i == -1) ? player++ : -1;
 
 	} while (i == -1);
 
