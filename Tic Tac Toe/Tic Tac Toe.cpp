@@ -13,6 +13,7 @@ int main() {
 
 	int mode{ menu() };
 	
+	display();
 	(mode % 2) ? singlePlayer() : twoPlayer();
 
 	return 0;
@@ -30,7 +31,7 @@ int menu() {
 	do {
 		int c = 0;
 
-		switch (c = _getch()) {
+		switch (c = getch()) {
 		case (KEY_UP):
 
 			system("cls");
@@ -67,7 +68,7 @@ int menu() {
 
 			int c = 0;
 
-			switch (c = _getch()) {
+			switch (c = getch()) {
 			case (KEY_UP):
 
 				system("cls");
@@ -141,14 +142,11 @@ void display() {
 	}
 
 	for (int i{ 0 }; i < 3; i++) {
-		//cout << "     |     |     \n";
-		printf("     |     |     \n");
 		int ind = 1 + i * 3;
 
-		printf("  %c  |  %c  |  %c\n", grid[ind], grid[ind + 1], grid[ind + 2]);
-		//cout << " " << grid[1] << "   |  " << grid[2] << "  |  " << grid[3] << "\n";
 		printf("     |     |     \n");
-		//cout << "     |     |     \n";
+		printf("  %c  |  %c  |  %c\n", grid[ind], grid[ind + 1], grid[ind + 2]);
+		printf("     |     |     \n");
 		
 		if (i != 2) {
 			printf("-----|-----|-----\n");
@@ -181,7 +179,6 @@ int singlePlayer() {
 	char sign, choice;
 
 	do {
-		display();
 		player = (player % 2) ? 1 : 2;
 		sign = (player == 1) ? 'X' : 'O';
 
@@ -190,10 +187,13 @@ int singlePlayer() {
 			printf("Player %u, enter your number: ", player);
 			cin >> choice;
 			
-			if (!pickBoard(choice, sign)) {
+			do {
+				int re = pickBoard(choice, sign);
+				if (re) { break; }
+				
 				printf("Invalid, press any key to continue...");
-				_getch();
-			}
+				cin >> choice;
+			} while(1);
 		}
 		else {
 			AI();
@@ -201,10 +201,10 @@ int singlePlayer() {
 		
 		i = checkWin();
 		(i == -1) ? player++ : -1;
+		display();
 
 	} while (i == -1);
 
-	display();
 	if (i == 1) {
 		if (player == 1) {
 			printf("Player %d has win!\nPress any key to quit...", player);
@@ -217,7 +217,6 @@ int singlePlayer() {
 		printf("Draw, no winners.\nPress any key to quit...");
 	}
 
-	_getch();
 	return 0;
 }
 
@@ -227,24 +226,26 @@ int twoPlayer() {
 	char sign, choice;
 
 	do {
-		display();
 		player = (player % 2) ? 1 : 2;
 		sign = (player == 1) ? 'X' : 'O';
 		printf("Player %u, enter your number: ", player);
 
 		cin >> choice;
 		
-		if (!pickBoard(choice, sign)) {
+		do {
+			int re = pickBoard(choice, sign);
+			if (re) { break; }
+				
 			printf("Invalid, press any key to continue...");
-			_getch();
-		}
+			cin >> choice;
+		} while(1);
 
 		i = checkWin();
 		(i == -1) ? player++ : -1;
+		display();
 
 	} while (i == -1);
 
-	display();
 	if (i == 1) {
 		printf("Player %d has win!\nPress any key to quit...", player);
 	}
@@ -252,7 +253,6 @@ int twoPlayer() {
 		printf("Draw, no winners.\nPress any key to quit...");
 	}
 
-	_getch();
 	return 0;
 }
 
